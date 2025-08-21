@@ -8,23 +8,28 @@ const sepia = document.getElementById('sepia');
 const reset = document.getElementById('reset');
 const download = document.getElementById('download');
 
-let img = new Image();
-let original = null;
+let imgDataUrl = '';
+let imgOriginal = null;
 
 function drawImage() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Compose filter string
-    const filter = `
-        brightness(${brightness.value}%)
-        contrast(${contrast.value}%)
-        grayscale(${grayscale.value}%)
-        sepia(${sepia.value}%)
-    `;
-
-    ctx.filter = filter;
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    ctx.filter = 'none';
+    if (!imgDataUrl) return;
+    const tempImg = new Image();
+    tempImg.onload = function() {
+        const scale = Math.min(400 / tempImg.width, 400 / tempImg.height, 1);
+        canvas.width = tempImg.width * scale;
+        canvas.height = tempImg.height * scale;
+        const filter = `
+            brightness(${brightness.value}%)
+            contrast(${contrast.value}%)
+            grayscale(${grayscale.value}%)
+            sepia(${sepia.value}%)
+        `;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.filter = filter;
+        ctx.drawImage(tempImg, 0, 0, canvas.width, canvas.height);
+        ctx.filter = 'none';
+    };
+    tempImg.src = imgDataUrl;
 }
 
 upload.addEventListener('change', (e) => {
@@ -32,37 +37,36 @@ upload.addEventListener('change', (e) => {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = function(evt) {
-        img.onload = function() {
-            canvas.width = img.width > 400 ? 400 : img.width;
-            canvas.height = img.height > 400 ? 400 : img.height;
-            // Save original image data for reset
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            original = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            drawImage();
-        }
-        img.src = evt.target.result;
-    }
+        imgDataUrl = evt.target.result;
+        drawImage();
+        imgOriginal = imgDataUrl;
+        brightness.value = 100;
+        contrast.value = 100;
+        grayscale.value = 0;
+        sepia.value = 0;
+    };
     reader.readAsDataURL(file);
 });
 
 [brightness, contrast, grayscale, sepia].forEach(control => {
     control.addEventListener('input', () => {
-        if (img.src) drawImage();
+        drawImage();
     });
 });
 
 reset.addEventListener('click', () => {
-    brightness.value = 100;
-    contrast.value = 100;
-    grayscale.value = 0;
-    sepia.value = 0;
-    if (original) {
-        ctx.putImageData(original, 0, 0);
+    if (imgOriginal) {
+        imgDataUrl = imgOriginal;
+        brightness.value = 100;
+        contrast.value = 100;
+        grayscale.value = 0;
+        sepia.value = 0;
         drawImage();
     }
 });
 
 download.addEventListener('click', () => {
+    if (canvas.width === 0 || canvas.height === 0) return;
     const link = document.createElement('a');
     link.download = 'edited-photo.png';
     link.href = canvas.toDataURL('image/png');
