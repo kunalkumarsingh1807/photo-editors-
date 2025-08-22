@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Photo Editor</title>
-  <link rel="stylesheet" href="photo-editor.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="editor-container">
-    <h2>Photo Editor</h2>
-    <input type="file" id="upload" accept="image/*">
-    <br>
-    <canvas id="canvas"></canvas>
-    <div class="controls">
-      <label>Brightness <input type="range" id="brightness" min="0" max="200" value="100"></label>
-      <label>Contrast <input type="range" id="contrast" min="0" max="200" value="100"></label>
-      <label>Saturation <input type="range" id="saturate" min="0" max="200" value="100"></label>
-      <label>Grayscale <input type="range" id="grayscale" min="0" max="100" value="0"></label>
-      <label>Sepia <input type="range" id="sepia" min="0" max="100" value="0"></label>
-      <label>Invert <input type="range" id="invert" min="0" max="100" value="0"></label>
-      <button id="reset">Reset</button>
-      <button id="download">Download</button>
+  <div class="container">
+    <h1>Photo Editor</h1>
+    <input type="file" id="imageInput" accept="image/*" />
+    <div class="image-container">
+      <img src="placeholder.jpg" alt="Image" id="previewImage" />
     </div>
-  </div>
-  <script src="photo-editor.js"></script>
-</body>
-</html>
+    <div class="controls">
+      <label for="brightness">Brightness:</label>
+      <input type="range" id="brightness" min="0" max="200" value="100" /><br />
+      <label for="contrast">Contrast:</label>
+      <input type="range" id="contrast" min="0" max="200" value="100" /><br />
+      <label for="grayscale">Grayscale:</label>
+      <input type="range" id="grayscale" min="0" max="100" value="0" /><br />
+      <label for="blur">Blur:</label>
+      <input type="range" id="blur" min="0" max="10" value="0" /><br />
+      <label for="sepia">Sepia:</label>
+      <input type="range" id="sepia" min="0" max="100" value="0" /><br />
+      <label for="hue">Hue Rotation:</label>
+      <input type="range" id="hue" min="0" max="360" value="0" /><br />
+      <button id="reset">Reset</button>
+      <button id="save">Save</button
