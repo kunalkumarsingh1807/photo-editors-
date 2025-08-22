@@ -1,51 +1,31 @@
-/* Photo Editor Container */
-.photo-editor {
-  max-width: 500px;
-  margin: 40px auto;
-  padding: 20px;
-  background: #f6f6f6;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.13);
-  text-align: center;
+// Get references to HTML elements
+const image = document.getElementById('image');
+const fileInput = document.getElementById('fileInput');
+const brightness = document.getElementById('brightness');
+const contrast = document.getElementById('contrast');
+const grayscale = document.getElementById('grayscale');
+
+// Function to update CSS filters
+function updateFilters() {
+  image.style.filter =
+    `brightness(${brightness.value}) contrast(${contrast.value}) grayscale(${grayscale.value})`;
 }
 
-/* Image display */
-.photo-editor img {
-  max-width: 100%;
-  border-radius: 8px;
-  margin-bottom: 18px;
-  transition: filter 0.2s;
-}
+// Attach event listeners to sliders
+[brightness, contrast, grayscale].forEach(input => {
+  input.addEventListener('input', updateFilters);
+});
 
-/* Controls (buttons/sliders) */
-.editor-controls {
-  margin-top: 11px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.editor-controls label {
-  font-weight: 500;
-  margin-bottom: 3px;
-}
-
-.editor-controls input[type="range"] {
-  width: 100%;
-  accent-color: #3399ff;
-}
-
-.editor-controls button {
-  margin-top: 8px;
-  padding: 8px 18px;
-  background: #3399ff;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.editor-controls button:hover {
-  background: #267acc;
-}
+// Handle image upload
+fileInput.addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      image.src = evt.target.result;
+      image.style.display = 'block';
+      updateFilters();
+    }
+    reader.readAsDataURL(file);
+  }
+});
