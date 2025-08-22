@@ -1,73 +1,51 @@
-// Get references to elements
-const imageInput = document.getElementById('imageInput');
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-// Filter controls
-const brightness = document.getElementById('brightnessSlider');
-const contrast = document.getElementById('contrastSlider');
-const grayscale = document.getElementById('grayscaleSlider');
-const sepia = document.getElementById('sepiaSlider');
-const hue = document.getElementById('hueRotateSlider');
-const saturation = document.getElementById('saturationSlider');
-
-// Save and reset buttons
-const saveBtn = document.getElementById('saveBtn');
-const resetBtn = document.getElementById('resetBtn');
-
-let originalImage = new Image();
-
-imageInput.addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    originalImage.src = ev.target.result;
-    originalImage.onload = function() {
-      canvas.width = originalImage.width;
-      canvas.height = originalImage.height;
-      drawImage();
-    }
-  }
-  reader.readAsDataURL(file);
-});
-
-function getFilterString() {
-  return (
-    `brightness(${brightness.value}%) ` +
-    `contrast(${contrast.value}%) ` +
-    `grayscale(${grayscale.value}%) ` +
-    `sepia(${sepia.value}%) ` +
-    `hue-rotate(${hue.value}deg) ` +
-    `saturate(${saturation.value}%)`
-  );
+/* Photo Editor Container */
+.photo-editor {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #f6f6f6;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+  text-align: center;
 }
 
-function drawImage() {
-  ctx.filter = getFilterString();
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(originalImage, 0, 0);
+/* Image display */
+.photo-editor img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  transition: filter 0.2s;
 }
 
-function resetFilters() {
-  brightness.value = 100;
-  contrast.value = 100;
-  grayscale.value = 0;
-  sepia.value = 0;
-  hue.value = 0;
-  saturation.value = 100;
-  drawImage();
+/* Controls (buttons/sliders) */
+.editor-controls {
+  margin-top: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-[brightness, contrast, grayscale, sepia, hue, saturation].forEach(input => {
-  input.addEventListener('input', drawImage);
-});
+.editor-controls label {
+  font-weight: 500;
+  margin-bottom: 3px;
+}
 
-resetBtn.addEventListener('click', resetFilters);
+.editor-controls input[type="range"] {
+  width: 100%;
+  accent-color: #3399ff;
+}
 
-saveBtn.addEventListener('click', function() {
-  const link = document.createElement('a');
-  link.download = 'edited_image.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-});
+.editor-controls button {
+  margin-top: 8px;
+  padding: 8px 18px;
+  background: #3399ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.editor-controls button:hover {
+  background: #267acc;
+}
