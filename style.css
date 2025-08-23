@@ -1,31 +1,56 @@
-// Get references to HTML elements
-const image = document.getElementById('image');
-const fileInput = document.getElementById('fileInput');
-const brightness = document.getElementById('brightness');
-const contrast = document.getElementById('contrast');
-const grayscale = document.getElementById('grayscale');
-
-// Function to update CSS filters
-function updateFilters() {
-  image.style.filter =
-    `brightness(${brightness.value}) contrast(${contrast.value}) grayscale(${grayscale.value})`;
+body {
+  background: #f0f2f5;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 0;
 }
-
-// Attach event listeners to sliders
-[brightness, contrast, grayscale].forEach(input => {
-  input.addEventListener('input', updateFilters);
-});
-
-// Handle image upload
-fileInput.addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      image.src = evt.target.result;
-      image.style.display = 'block';
-      updateFilters();
-    }
-    reader.readAsDataURL(file);
-  }
-});
+.editor-container {
+  background: #fff;
+  margin-top: 32px;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 3px 22px rgba(0,0,0,0.18);
+  text-align: center;
+}
+#canvas {
+  margin: 18px 0;
+  max-width: 450px;
+  max-height: 350px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+}
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+label {
+  width: 320px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+}
+input[type="range"] {
+  width: 160px;
+}
+button {
+  margin: 6px 10px 0 0;
+  padding: 9px 22px;
+  border: none;
+  background: #1976d2;
+  color: #fff;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: #1565c0;
+}
